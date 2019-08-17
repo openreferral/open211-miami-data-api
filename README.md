@@ -1,24 +1,28 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This Rails application is an API that:
 
-Things you may want to cover:
+* connects to the remote 211 Miami SQL Server
+* queries the data and saves them as CSVs
+* utilizes the HSDS Transformer to transform those CSVs into HSDS-compliant CSVs, generates a datapackage.json file based on the output CSVs, and zip the json file and data files into one datapackage.zip
+* exposes that zip via a web API
 
-* Ruby version
+## Installation 
+Clone this repo locally.
 
-* System dependencies
+Run `bundle install`
 
-* Configuration
+### System dependencies
+See the `.ruby-version` for the required ruby version.
 
-* Database creation
+You should have MS SQL Server installed (directly or via Docker), and a way to access that server (e.g. FreeTDS). See this tutorial if you are on a Mac: https://www.microsoft.com/en-us/sql-server/developer-get-started/ruby/mac/step/2.html
 
-* Database initialization
+### Configuration
 
-* How to run the test suite
+### Database creation
 
-* Services (job queues, cache servers, search engines, etc.)
+### Database initialization
 
-* Deployment instructions
+## Running the tests
 
-* ...
+## Deployment
