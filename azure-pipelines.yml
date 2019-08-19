@@ -17,6 +17,10 @@ steps:
 #  displayName: 'install imagemagick'
 
 - script: |
+    rbenv install 2.4.0
+  displayName: 'rbenv install'
+
+- script: |
     gem install bundler
     bundle install --retry=3 --jobs=4
   displayName: 'bundle install'
