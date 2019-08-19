@@ -1,0 +1,13 @@
+local:
+  service: Disk
+  root: <%= Rails.root.join("storage") %>
+
+test:
+  service: Disk
+  root: <%= Rails.root.join("tmp/storage") %>
+
+azure:
+  service: AzureStorage
+  storage_account_name: <%= ENV.fetch("AZURE_STORAGE_ACCOUNT") %>
+  storage_access_key: <%= ENV.fetch("AZURE_STORAGE_KEY") %>
+  container: <%= ENV.fetch("AZURE_STORAGE_CONTAINER") %>
