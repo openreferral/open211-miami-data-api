@@ -1,6 +1,7 @@
 class DatapackageController < ApplicationController
 
+
   def show
-    render text: "Test"
+    render json: DatapackageSerializer.new(Datapackage.last)
   end
 end
