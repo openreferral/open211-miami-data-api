@@ -13,7 +13,7 @@ describe DatapackageController do
       data = JSON.parse response.body
 
       expect(data["data"]["attributes"]["name"]).to eq("datapackage-1566177582.zip")
-      expect(data["data"]["attributes"]["path"]).to be_present
+      expect(data["data"]["attributes"]["url"]).to be_present
     end
   end
 end
