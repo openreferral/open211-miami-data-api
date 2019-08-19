@@ -17,7 +17,7 @@ steps:
 #  displayName: 'install imagemagick'
 
 - script: |
-    gem install bundler
+    gem install bundler -v 2.0.2
     bundle install --retry=3 --jobs=4
   displayName: 'bundle install'
 
