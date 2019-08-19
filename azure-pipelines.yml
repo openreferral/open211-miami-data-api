@@ -9,7 +9,7 @@ pool:
 steps:
 - task: UseRubyVersion@0
   inputs:
-    versionSpec: '>= 2.4'
+    versionSpec: '= 2.4'
 
 #- script: |
 #    gem install bundler
@@ -20,6 +20,10 @@ steps:
     gem install bundler
     bundle install --retry=3 --jobs=4
   displayName: 'bundle install'
+
+- script: |
+    bundle exec rails db:migrate
+  displayName: 'rails db:migrate'
 
 #- script: bundle exec rake
 #  displayName: 'bundle exec rake'
