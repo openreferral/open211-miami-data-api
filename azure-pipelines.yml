@@ -18,6 +18,8 @@ steps:
 
 - script: |
     gem install bundler -v 2.0.2
+    gem update --system
+    bundler update --bundler
     bundle install --retry=3 --jobs=4
   displayName: 'bundle install'
 
