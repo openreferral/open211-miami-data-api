@@ -2,22 +2,23 @@
 default: &default
   adapter: sqlserver
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  host: <%= ENV.fetch("APP_DB_HOST") %>
+  port: <%= ENV.fetch("APP_DB_PORT") { 1433 } %>
+  username: <%= ENV.fetch("APP_DB_USERNAME") %>
+  password: <%= ENV.fetch("APP_DB_PASSWORD") %>
   timeout: 5000
 
 development:
   <<: *default
-  host: <%= ENV.fetch("SOURCE_DB_HOST") %>
-  port: <%= ENV.fetch("SOURCE_DB_PORT") { 1433 } %>
-  username: <%= ENV.fetch("SOURCE_DB_USERNAME") %>
-  password: <%= ENV.fetch("SOURCE_DB_PASSWORD") %>
+  database: open211_miami_dev
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: db/test.sqlite3
+  database: open211_miami_test
 
 production:
   <<: *default
-  database: db/production.sqlite3
+  database: open211_miami_prod
