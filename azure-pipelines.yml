@@ -11,10 +11,15 @@ steps:
   inputs:
     versionSpec: '>= 2.4'
 
-#- script: |
-#    gem install bundler
-#    bundle install --retry=3 --jobs=4
-#  displayName: 'install imagemagick'
+- script: |
+    apt build-dep imagemagick
+    wget https://www.imagemagick.org/download/ImageMagick.tar.gz
+    tar xf ImageMagick.tar.gz
+    cd ImageMagick-7*
+    ./configure
+    make
+    make install
+  displayName: 'install imagemagick'
 
 - script: |
     gem install bundler -v 2.0.2
