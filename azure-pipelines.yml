@@ -1,50 +1,50 @@
-# Ruby
-# Package your Ruby application.
-# Add steps that install rails, analyze code, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/ruby
-
-pool:
-  vmImage: 'Ubuntu 16.04'
-
-steps:
-- task: UseRubyVersion@0
-  inputs:
-    versionSpec: '>= 2.4'
-
-- script: |
-    apt build-dep imagemagick
-    wget https://www.imagemagick.org/download/ImageMagick.tar.gz
-    tar xf ImageMagick.tar.gz
-    cd ImageMagick-7*
-    ./configure
-    make
-    make install
-  displayName: 'install imagemagick'
-
-- script: |
-    gem install bundler -v 2.0.2
-    gem update --system
-    bundler update --bundler
-    bundle install --retry=3 --jobs=4
-  displayName: 'bundle install'
-
-- script: |
-    bundle exec rails db:migrate
-  displayName: 'rails db:migrate'
-
-#- script: bundle exec rake
-#  displayName: 'bundle exec rake'
-
-# - script: bundle exec rspec spec --format RspecJunitFormatter --out test_results/TEST-rspec.xml
-
-#- task: PublishTestResults@2
-#  condition: succeededOrFailed()
+## Ruby
+## Package your Ruby application.
+## Add steps that install rails, analyze code, save build artifacts, deploy, and more:
+## https://docs.microsoft.com/azure/devops/pipelines/languages/ruby
+#
+#pool:
+#  vmImage: 'Ubuntu 16.04'
+#
+#steps:
+#- task: UseRubyVersion@0
 #  inputs:
-#    testResultsFiles: '**/test-*.xml'
-#    testRunTitle: 'Ruby tests'
-
-#- task: PublishCodeCoverageResults@1
-#  inputs:
-#    codeCoverageTool: Cobertura
-#    summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/coverage.xml'
-#    reportDirectory: '$(System.DefaultWorkingDirectory)/**/coverage'
+#    versionSpec: '>= 2.4'
+#
+#- script: |
+#    apt build-dep imagemagick
+#    wget https://www.imagemagick.org/download/ImageMagick.tar.gz
+#    tar xf ImageMagick.tar.gz
+#    cd ImageMagick-7*
+#    ./configure
+#    make
+#    make install
+#  displayName: 'install imagemagick'
+#
+#- script: |
+#    gem install bundler -v 2.0.2
+#    gem update --system
+#    bundler update --bundler
+#    bundle install --retry=3 --jobs=4
+#  displayName: 'bundle install'
+#
+#- script: |
+#    bundle exec rails db:migrate
+#  displayName: 'rails db:migrate'
+#
+##- script: bundle exec rake
+##  displayName: 'bundle exec rake'
+#
+## - script: bundle exec rspec spec --format RspecJunitFormatter --out test_results/TEST-rspec.xml
+#
+##- task: PublishTestResults@2
+##  condition: succeededOrFailed()
+##  inputs:
+##    testResultsFiles: '**/test-*.xml'
+##    testRunTitle: 'Ruby tests'
+#
+##- task: PublishCodeCoverageResults@1
+##  inputs:
+##    codeCoverageTool: Cobertura
+##    summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/coverage.xml'
+##    reportDirectory: '$(System.DefaultWorkingDirectory)/**/coverage'
