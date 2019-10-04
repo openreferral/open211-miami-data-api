@@ -1,9 +1,15 @@
 require "rails_helper"
 
 describe Extractor do
+  describe ".run" do
+    xit 'transforms extracted files into HSDS zip and creates datapackage record' do
+      # stub extract methods
+      # expect(subject.run).to change(Datapackage, :count).by(1)
+      # expect zip file to have been created (stub hsds transformer?)
+    end
+  end
 
   describe "#extract_providers" do
-
     it "extracts provider table to CSV" do
 
       Extractor.new.extract_providers

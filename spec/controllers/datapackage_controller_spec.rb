@@ -16,4 +16,14 @@ describe DatapackageController do
       expect(data["data"]["attributes"]["url"]).to be_present
     end
   end
+
+  describe 'create' do
+    it 'kicks off extractor' do
+      allow(Extractor).to receive(:run)
+
+      post :create
+
+      expect(Extractor).to have_received(:run)
+    end
+  end
 end

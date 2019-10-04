@@ -4,4 +4,5 @@ Rails.application.routes.draw do
   # TODO add an apis.json as root
 
   get 'datapackage', to: 'datapackage#show'
+  post 'datapackage', to: 'datapackage#create'
 end

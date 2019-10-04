@@ -1,6 +1,8 @@
 require 'csv'
+require 'hsds_transformer'
+
 class Extractor
-  attr_reader :client
+  attr_reader :client, :output_dir, :mapping_path, :datapackage_dir
 
   def self.run
     new.extract
@@ -14,40 +16,39 @@ class Extractor
       port: ENV.fetch("SOURCE_DB_PORT")
     )
 
-    @output_path = File.join ENV.fetch("RAILS_ROOT"), "tmp"
+    @output_dir = File.join ENV.fetch("RAILS_ROOT"), "tmp/source_data"
+    @mapping_path  = File.join ENV.fetch("RAILS_ROOT"), "lib/mapping.yaml"
+    @datapackage_dir = File.join ENV.fetch("RAILS_ROOT"), "tmp/datapackage"
   end
 
   def extract
     extract_providers
     extract_provider_taxonomy
     extract_provider_target_population
-    # TODO Store on Azure storage
+    transform_into_datapackage
   end
 
   def extract_providers
-    result = @client.execute("SELECT * FROM community_resource.dbo.provider")
-    path = File.join @output_path, "providers.csv"
+    result = client.execute("SELECT * FROM community_resource.dbo.provider")
 
-    extract_to_csv(result, path)
+    extract_to_csv(result, providers_path)
   end
 
   def extract_provider_taxonomy
-    result = @client.execute("SELECT * FROM community_resource.dbo.provider_taxonomy")
-    path = File.join @output_path, "provider_taxonomy.csv"
+    result = client.execute("SELECT * FROM community_resource.dbo.provider_taxonomy")
 
-    extract_to_csv(result, path)
+    extract_to_csv(result, provider_taxonomy_path)
   end
 
 
   # TODO: do we autogenerate ID here? then add new column to beginning of sheet called "id" and set value equal to the function: =CONCATENATE(B2;"-";ROW(A2)) . Drag this function all the way down.
   # Maybe we can get ID column from DB now that we have direct access
   def extract_provider_target_population
-    result = @client.execute(
-        "SELECT community_resource.dbo.provider_taxonomy.provider_service_code_id AS provider_service_code_id,community_resource.dbo.provider_taxonomy.provider_id AS provider_id,community_resource.dbo.provider_target_population.target_population_code AS target_population_code,community_resource.dbo.provider_target_population.target_population_name AS target_population_name FROM community_resource.dbo.provider_taxonomy JOIN community_resource.dbo.provider_target_population ON community_resource.dbo.provider_taxonomy.provider_service_code_id = community_resource.dbo.provider_target_population.provider_service_code_id"
+    result = client.execute(
+      "SELECT community_resource.dbo.provider_taxonomy.provider_service_code_id AS provider_service_code_id,community_resource.dbo.provider_taxonomy.provider_id AS provider_id,community_resource.dbo.provider_target_population.target_population_code AS target_population_code,community_resource.dbo.provider_target_population.target_population_name AS target_population_name FROM community_resource.dbo.provider_taxonomy JOIN community_resource.dbo.provider_target_population ON community_resource.dbo.provider_taxonomy.provider_service_code_id = community_resource.dbo.provider_target_population.provider_service_code_id"
     )
-    path = File.join @output_path, "provider_target_populations_joined.csv"
 
-    extract_to_csv(result, path)
+    extract_to_csv(result, provider_target_population_path)
   end
 
   private
@@ -64,4 +65,21 @@ class Extractor
     end
   end
 
+  def transform_into_datapackage
+    zip = HsdsTransformer::Open211MiamiTransformer.run(input_path: output_dir, mapping: mapping_path, output_path: datapackage_dir, include_custom: true, zip_output: true) # TODO confirm the zip is the output - might be nothing and then we grab file from output path
+
+    Datapackage.create(file: zip) ## Other fields? # TODO Store on Azure storage
+  end
+
+  def providers_path
+    File.join output_dir, "providers.csv"
+  end
+
+  def provider_taxonomy_path
+    File.join output_dir, "provider_taxonomy.csv"
+  end
+
+  def provider_target_population_path
+    File.join output_dir, "provider_target_populations_joined.csv"
+  end
 end
