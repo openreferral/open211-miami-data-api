@@ -20,11 +20,9 @@ class Extractor
   def extract
     extract_providers
     extract_provider_taxonomy
-    # extract provider target population
-      # this needs to be merged into provider taxonomy output by joining on provider_id and provider_service_code_id, and then autogenerate "id" column and set the value to be provider_service_code_id hyphen index
+    extract_provider_target_population
+    # TODO Store on Azure storage
   end
-
-  private
 
   def extract_providers
     result = @client.execute("SELECT * FROM community_resource.dbo.provider")
@@ -39,6 +37,20 @@ class Extractor
 
     extract_to_csv(result, path)
   end
+
+
+  # TODO: do we autogenerate ID here? then add new column to beginning of sheet called "id" and set value equal to the function: =CONCATENATE(B2;"-";ROW(A2)) . Drag this function all the way down.
+  # Maybe we can get ID column from DB now that we have direct access
+  def extract_provider_target_population
+    result = @client.execute(
+        "SELECT community_resource.dbo.provider_taxonomy.provider_service_code_id AS provider_service_code_id,community_resource.dbo.provider_taxonomy.provider_id AS provider_id,community_resource.dbo.provider_target_population.target_population_code AS target_population_code,community_resource.dbo.provider_target_population.target_population_name AS target_population_name FROM community_resource.dbo.provider_taxonomy JOIN community_resource.dbo.provider_target_population ON community_resource.dbo.provider_taxonomy.provider_service_code_id = community_resource.dbo.provider_target_population.provider_service_code_id"
+    )
+    path = File.join @output_path, "provider_target_populations_joined.csv"
+
+    extract_to_csv(result, path)
+  end
+
+  private
 
   def extract_to_csv(result, path)
     CSV.open(path, 'wb') do |csv|
