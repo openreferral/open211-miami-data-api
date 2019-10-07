@@ -16,9 +16,9 @@ class Extractor
       port: ENV.fetch("SOURCE_DB_PORT")
     )
 
-    @output_dir = File.join ENV.fetch("RAILS_ROOT"), "tmp/source_data"
-    @mapping_path  = File.join ENV.fetch("RAILS_ROOT"), "lib/mapping.yaml"
-    @datapackage_dir = File.join ENV.fetch("RAILS_ROOT"), "tmp/datapackage"
+    @output_dir = File.join ENV.fetch("ROOT_PATH"), "tmp/source_data/"
+    @mapping_path  = File.join ENV.fetch("ROOT_PATH"), "lib/mapping.yaml"
+    @datapackage_dir = File.join ENV.fetch("ROOT_PATH"), "tmp/dtpkg/"
   end
 
   def extract
@@ -66,9 +66,10 @@ class Extractor
   end
 
   def transform_into_datapackage
-    zip = HsdsTransformer::Open211MiamiTransformer.run(input_path: output_dir, mapping: mapping_path, output_path: datapackage_dir, include_custom: true, zip_output: true) # TODO confirm the zip is the output - might be nothing and then we grab file from output path
+    transformer = HsdsTransformer::Runner.run(custom_transformer: "Open211MiamiTransformer", input_path: output_dir, mapping: mapping_path, output_path: datapackage_dir, include_custom: true, zip_output: true)
 
-    Datapackage.create(file: zip) ## Other fields? # TODO Store on Azure storage
+    Datapackage.create(file: transformer.zipfile_name) ## Other fields?
+    # # TODO Store on Azure storage
   end
 
   def providers_path

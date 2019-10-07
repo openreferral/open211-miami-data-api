@@ -3,7 +3,7 @@ require 'rails_helper'
 describe DatapackageController do
   describe 'show' do
     it "returns latest datapackage" do
-      file_path = File.join(ENV.fetch('RAILS_ROOT'), 'lib', 'datapackage', 'datapackage-1566177582.zip')
+      file_path = File.join(ENV.fetch('ROOT_PATH'), 'lib', 'datapackage', 'datapackage-1566177582.zip')
       dp = Datapackage.new
       dp.file.attach(io: File.open(file_path), filename: 'datapackage-1566177582.zip', content_type: 'application/zip')
       dp.save

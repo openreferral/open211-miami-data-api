@@ -2,10 +2,10 @@ require "rails_helper"
 
 describe Extractor do
   describe ".run" do
-    xit 'transforms extracted files into HSDS zip and creates datapackage record' do
+    it 'transforms extracted files into HSDS zip and creates datapackage record' do
       # stub extract methods
-      # expect(subject.run).to change(Datapackage, :count).by(1)
-      # expect zip file to have been created (stub hsds transformer?)
+      expect{Extractor.run}.to change(Datapackage, :count).by(1)
+      expect(Datapackage.last.file).to be_present
     end
   end
 
@@ -14,8 +14,8 @@ describe Extractor do
 
       Extractor.new.extract_providers
 
-      file_path = File.join(ENV.fetch("RAILS_ROOT"), "tmp", "providers.csv")
-      fixture_file_path = File.join(ENV.fetch("RAILS_ROOT"), "spec", "fixtures", "extracted_providers.csv")
+      file_path = File.join(ENV.fetch("ROOT_PATH"), "tmp", "providers.csv")
+      fixture_file_path = File.join(ENV.fetch("ROOT_PATH"), "spec", "fixtures", "extracted_providers.csv")
 
       rows = []
 
@@ -40,8 +40,8 @@ describe Extractor do
     it "extracts provider_taxonomy table to CSV" do
       Extractor.new.extract_provider_taxonomy
 
-      file_path = File.join(ENV.fetch("RAILS_ROOT"), "tmp", "provider_taxonomy.csv")
-      fixture_file_path = File.join(ENV.fetch("RAILS_ROOT"), "spec", "fixtures", "extracted_provider_taxonomy.csv")
+      file_path = File.join(ENV.fetch("ROOT_PATH"), "tmp", "provider_taxonomy.csv")
+      fixture_file_path = File.join(ENV.fetch("ROOT_PATH"), "spec", "fixtures", "extracted_provider_taxonomy.csv")
 
       rows = []
 
@@ -65,8 +65,8 @@ describe Extractor do
     it "extracts joined provider_target_population data to CSV" do
       Extractor.new.extract_provider_target_population
 
-      file_path = File.join(ENV.fetch("RAILS_ROOT"), "tmp", "provider_target_populations_joined.csv")
-      fixture_file_path = File.join(ENV.fetch("RAILS_ROOT"), "spec", "fixtures", "extracted_provider_target_populations_joined.csv")
+      file_path = File.join(ENV.fetch("ROOT_PATH"), "tmp", "provider_target_populations_joined.csv")
+      fixture_file_path = File.join(ENV.fetch("ROOT_PATH"), "spec", "fixtures", "extracted_provider_target_populations_joined.csv")
 
       rows = []
 

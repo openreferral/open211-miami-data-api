@@ -47,3 +47,5 @@ gem 'tzinfo-data'#, platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'azure-storage', require: false
 
 gem 'fast_jsonapi'
+
+gem 'hsds_transformer', '0.0.3'

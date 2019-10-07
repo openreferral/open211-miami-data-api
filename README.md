@@ -19,10 +19,35 @@ You should have MS SQL Server installed (directly or via Docker), and a way to a
 
 ### Configuration
 
-### Database creation
+In development, copy `.env.example` and save as `.env`. Add the values for the given env variables in that file and save.
 
-### Database initialization
+In production, look at the env variables in `.env.example`. Set those variables in production using whatever method you have set up for env var management.
+
+### Database creation and initialization
+
+Run:
+
+`rails db:setup`
+
+This creates and migrates the database. 
+
+To migrate the database upon future changes:
+
+`rails db:migrate`
+
+
+### Starting the server
+
+Locally:
+
+`bundle exec rails s`
+
+Then the server is running at `localhost:3000` 
 
 ## Running the tests
+
+Run 
+
+`rspec spec`
 
 ## Deployment
