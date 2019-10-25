@@ -2,7 +2,7 @@ apt-get install wget
 apt-get install build-essential
 apt-get install libc6-dev
 
-wget http://www.freetds.org/files/stable/freetds-1.1.6.tar.gz
+wget https://www.freetds.org/files/stable/freetds-1.1.tar.gz
 tar -xzf freetds-1.1.6.tar.gz
 cd freetds-1.1.6
 ./configure --prefix=/usr/local --with-tdsver=7.3
