@@ -1,25 +1,30 @@
-FROM ruby:2.4-alpine
+FROM ruby:2.4.5
 MAINTAINER Shelby Switzer <shelby@civicunrest.com>
 
-ENV BUILD_PACKAGES bash curl-dev ruby-dev build-base freetds freetds-dev
-ENV RUBY_PACKAGES ruby ruby-io-console ruby-bundler
 
-# Update and install all of the required packages.
-# At the end, remove the apk cache
-RUN apk update && \
-    apk upgrade && \
-    apk add $BUILD_PACKAGES && \
-    apk add $RUBY_PACKAGES && \
-    rm -rf /var/cache/apk/*
 
-# Try running tds
-RUN  tsql -C
+RUN apt-get update && apt-get install -y wget gcc make && \
+  apt-get install -y build-essential && \
+  apt-get install -y libc6-dev && \
+  wget ftp://ftp.freetds.org/pub/freetds/stable/freetds-1.00.92.tar.gz && \
+  tar -xzf freetds-1.00.92.tar.gz && \
+  cd freetds-1.00.92 && \
+  ./configure --prefix=/usr/local --with-tdsver=7.3 && \
+  make && make install && make clean
+
+# RUN apt-get update
+# RUN apt-get --assume-yes install freetds-dev freetds-bin
+
+
 
 RUN mkdir /usr/app
 WORKDIR /usr/app
 
 COPY Gemfile /usr/app/
 COPY Gemfile.lock /usr/app/
+
+RUN gem install bundler
+
 RUN bundle install
 
 COPY . /usr/app
