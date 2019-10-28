@@ -1,8 +1,6 @@
 FROM ruby:2.4.5
 MAINTAINER Shelby Switzer <shelby@civicunrest.com>
 
-
-
 RUN apt-get update && apt-get install -y wget gcc make && \
   apt-get install -y build-essential && \
   apt-get install -y libc6-dev && \
@@ -11,10 +9,6 @@ RUN apt-get update && apt-get install -y wget gcc make && \
   cd freetds-1.00.92 && \
   ./configure --prefix=/usr/local --with-tdsver=7.3 && \
   make && make install && make clean
-
-# RUN apt-get update
-# RUN apt-get --assume-yes install freetds-dev freetds-bin
-
 
 
 RUN mkdir /usr/app
