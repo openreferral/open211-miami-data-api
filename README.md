@@ -51,3 +51,19 @@ Run
 `rspec spec`
 
 ## Deployment
+
+You can deploy with Docker. Once you have the docker container up and running and connected to a running SQL Server container (see docker-compose.yml), open an interactive container shell and set up the DB:
+
+```
+docker exec -it open211-miami-data-api_etl_api_1 bash
+root@455fb3fdc06f:/usr/app# rails db:create db:migrate
+```
+
+Note: `open211-miami-data-api_etl_api_1` is the container name. Your container name may be different.
+
+For now, you will need to migrate the database with every release. Once you deploy your new release, open an interactive shell and migrate:
+
+```
+docker exec -it open211-miami-data-api_etl_api_1 bash
+root@455fb3fdc06f:/usr/app# rails db:migrate
+```
