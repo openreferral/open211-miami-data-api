@@ -50,6 +50,21 @@ Run
 
 `rspec spec`
 
+## Using the API
+
+You must create an ApiAccount and get an api key before you can use the API. In Rails console:
+
+```
+a = ApiAccount.create
+api_key = a.api_key
+```
+
+Use the value of api_key in a request header when making a request:
+
+```
+"HTTP_AUTHORIZATION"=>"Token token=#{api_key}"
+```
+
 ## Deployment
 
 You can deploy with Docker. Once you have the docker container up and running and connected to a running SQL Server container (see docker-compose.yml), open an interactive container shell and set up the DB:

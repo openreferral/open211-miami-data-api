@@ -1,4 +1,5 @@
 class DatapackagesController < ApplicationController
+  before_action :authenticate_api_key!
 
   #TODO: Add API auth
   def show
