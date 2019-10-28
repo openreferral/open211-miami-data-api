@@ -4,11 +4,11 @@ require 'hsds_transformer'
 class Extractor
   attr_reader :client, :output_dir, :mapping_path, :datapackage_dir
 
-  def self.run
-    new.extract
+  def self.run(datapackage_id: nil)
+    new(datapackage_id: datapackage_id).extract
   end
 
-  def initialize
+  def initialize(datapackage_id: nil)
     @client = TinyTds::Client.new(
       username: ENV.fetch("SOURCE_DB_USERNAME"),
       password: ENV.fetch("SOURCE_DB_PASSWORD"),
@@ -16,12 +16,15 @@ class Extractor
       port: ENV.fetch("SOURCE_DB_PORT")
     )
 
+    @datapackage_id = datapackage_id
     @output_dir = File.join ENV.fetch("ROOT_PATH"), "tmp/source_data/"
     @mapping_path  = File.join ENV.fetch("ROOT_PATH"), "lib/mapping.yaml"
     @datapackage_dir = File.join ENV.fetch("ROOT_PATH"), "tmp/dtpkg/"
   end
 
   def extract
+    raise Exceptions::ExtractorError("Datapackage is not persisted") unless datapackage.persisted?
+
     extract_providers
     extract_provider_taxonomy
     extract_provider_target_population
@@ -51,6 +54,10 @@ class Extractor
     extract_to_csv(result, provider_target_population_path)
   end
 
+  def datapackage
+    @datapackage ||= Datapackage.find_by(id: datapackage_id) || Datapackage.create
+  end
+
   private
 
   def extract_to_csv(result, path)
@@ -68,7 +75,7 @@ class Extractor
   def transform_into_datapackage
     transformer = HsdsTransformer::Runner.run(custom_transformer: "Open211MiamiTransformer", input_path: output_dir, mapping: mapping_path, output_path: datapackage_dir, include_custom: true, zip_output: true)
 
-    Datapackage.create(file: transformer.zipfile_name) ## Other fields?
+    datapackage.update(file: transformer.zipfile_name) ## Other fields?
     # # TODO Store on Azure storage
   end
 

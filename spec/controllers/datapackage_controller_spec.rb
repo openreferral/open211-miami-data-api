@@ -2,6 +2,7 @@ require 'rails_helper'
 
 describe DatapackageController do
   describe 'show' do
+    # TODO use FakeFS gem
     it "returns latest datapackage" do
       file_path = File.join(ENV.fetch('ROOT_PATH'), 'lib', 'datapackage', 'datapackage-1566177582.zip')
       dp = Datapackage.new
@@ -18,7 +19,7 @@ describe DatapackageController do
   end
 
   describe 'create' do
-    it 'kicks off extractor' do
+    it 'kicks off extractor', perform_enqueued: true do
       allow(Extractor).to receive(:run)
 
       post :create

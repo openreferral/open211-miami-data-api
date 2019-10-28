@@ -34,6 +34,10 @@ group :development, :test do
   gem 'rspec-rails'
 end
 
+group :test do
+  gem 'fakefs', require: 'fakefs/safe'
+end
+
 group :development do
   gem 'listen', '>= 3.0.5', '< 3.2'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
@@ -49,3 +53,5 @@ gem 'azure-storage', require: false
 gem 'fast_jsonapi'
 
 gem 'hsds_transformer', '0.0.3'
+
+gem 'delayed_job_active_record'
