@@ -2,10 +2,32 @@ require "rails_helper"
 
 describe Extractor do
   describe ".run" do
-    it 'transforms extracted files into HSDS zip and creates datapackage record' do
-      # stub extract methods
-      expect{Extractor.run}.to change(Datapackage, :count).by(1)
-      expect(Datapackage.last.file).to be_present
+    context "without a datapackage record given" do
+      it "transforms extracted files into HSDS zip and creates datapackage record" do
+        # stub extract methods
+        expect { Extractor.run }.to change(Datapackage, :count).by(1)
+        expect(Datapackage.last.file).to be_present
+      end
+    end
+
+    context "with a datapackage record given" do
+      it "transforms extracted files into HSDS zip and update datapackage record" do
+        datapackage = Datapackage.create
+        # stub extract methods
+        expect { Extractor.run(datapackage_id: datapackage.id) }.to change(Datapackage, :count).by(0)
+        expect(datapackage.file).to be_present
+      end
+    end
+  end
+
+  describe "#extract" do
+    it "raises an error if datapackage does not persist" do
+      extractor = Extractor.new
+      datapackage = Datapackage.new
+
+      allow(extractor).to receive(:datapackage).and_return(datapackage)
+
+      expect { extractor.extract }.to raise_error(ExtractorError)
     end
   end
 

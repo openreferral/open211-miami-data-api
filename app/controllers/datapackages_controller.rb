@@ -1,8 +1,9 @@
-class DatapackageController < ApplicationController
+class DatapackagesController < ApplicationController
 
   #TODO: Add API auth
   def show
-    render json: DatapackageSerializer.new(Datapackage.last)
+    @datapackage = Datapackage.find(params[:id])
+    render json: DatapackageSerializer.new(@datapackage)
   end
 
   def create
@@ -22,7 +23,7 @@ class DatapackageController < ApplicationController
         }]
       }
     else
-      head 422
+      head 500
     end
   end
 end

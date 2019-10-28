@@ -2,7 +2,7 @@ require 'csv'
 require 'hsds_transformer'
 
 class Extractor
-  attr_reader :client, :output_dir, :mapping_path, :datapackage_dir
+  attr_reader :client, :datapackage_id, :output_dir, :mapping_path, :datapackage_dir
 
   def self.run(datapackage_id: nil)
     new(datapackage_id: datapackage_id).extract
@@ -23,7 +23,7 @@ class Extractor
   end
 
   def extract
-    raise Exceptions::ExtractorError("Datapackage is not persisted") unless datapackage.persisted?
+    raise ExtractorError.new("Datapackage is not persisted") unless datapackage.persisted?
 
     extract_providers
     extract_provider_taxonomy
