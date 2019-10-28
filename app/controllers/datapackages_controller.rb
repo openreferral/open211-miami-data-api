@@ -13,7 +13,7 @@ class DatapackagesController < ApplicationController
       Extractor.delay.run(datapackage_id: @datapackage.id)
 
       render json: {
-        links: { self: datapackage_path(@datapackage) },
+        links: { self: datapackage_url(@datapackage) },
         data: [{
          type: 'datapackages',
          id: @datapackage.id,

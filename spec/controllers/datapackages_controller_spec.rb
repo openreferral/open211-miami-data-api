@@ -21,12 +21,34 @@ describe DatapackagesController do
   end
 
   describe 'create' do
+    it 'creates a datapackage' do
+      allow(Extractor).to receive(:run)
+
+      expect{ post :create }.to change(Datapackage, :count).by 1
+    end
+
     it 'kicks off extractor' do
       allow(Extractor).to receive(:run)
 
       post :create
 
       expect(Extractor).to have_received(:run)
+
+      data = JSON.parse response.body
+      expect(data["links"]["self"]).to eq(datapackage_url(id: Datapackage.last.id))
+    end
+
+    it 'renders json with datapackage info' do
+      allow(Extractor).to receive(:run)
+      datapackage = Datapackage.create
+
+      allow(Datapackage).to receive(:new).and_return(datapackage)
+
+      post :create
+
+      data = JSON.parse response.body
+      expect(data["links"]["self"]).to eq(datapackage_url(id: datapackage.id))
+      expect(data["data"][0]["id"]).to eq(datapackage.id)
     end
   end
 end
