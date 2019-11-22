@@ -11,7 +11,7 @@ class DatapackagesController < ApplicationController
     @datapackage = Datapackage.new
 
     if @datapackage.save
-      Extractor.delay.run(datapackage_id: @datapackage.id)
+      Extractor.run(datapackage_id: @datapackage.id)
 
       render json: {
         links: { self: datapackage_url(@datapackage) },

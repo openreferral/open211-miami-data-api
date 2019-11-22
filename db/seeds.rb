@@ -10,3 +10,5 @@ file_path = File.join(ENV.fetch('ROOT_PATH'), 'lib', 'datapackage', 'datapackage
 dp = Datapackage.new
 dp.file.attach(io: File.open(file_path), filename: 'datapackage-1566177582.zip', content_type: 'application/zip')
 dp.save
+
+ApiAccount.create name: 'Initial'

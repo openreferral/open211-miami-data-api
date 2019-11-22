@@ -73,10 +73,13 @@ class Extractor
   end
 
   def transform_into_datapackage
-    transformer = HsdsTransformer::Runner.run(custom_transformer: "Open211MiamiTransformer", input_path: output_dir, mapping: mapping_path, output_path: datapackage_dir, include_custom: true, zip_output: true)
+    transformer = HsdsTransformer::BaseTransformer.run(custom_transformer: "Open211MiamiTransformer", input_path: output_dir, mapping: mapping_path, output_path: datapackage_dir, include_custom: true, zip_output: true)
 
-    datapackage.update(file: transformer.zipfile_name) ## Other fields?
-    # # TODO Store on Azure storage
+    datapackage.file.attach(
+      io: File.open(transformer.zipfile_name),
+      filename:  File.basename(transformer.zipfile_name),
+      content_type: 'application/zip'
+    )
   end
 
   def providers_path

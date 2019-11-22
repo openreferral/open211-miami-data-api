@@ -49,6 +49,7 @@ end
 gem 'tzinfo-data'#, platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem 'azure-storage', require: false
+gem 'azure-storage-blob', require: false
 
 gem 'fast_jsonapi'
 

@@ -1,7 +1,7 @@
 version: "3"
 
 services:
-  sql_server:
+  sql-server:
     image: microsoft/mssql-server-linux
     ports:
       - "1433:1433"
@@ -10,19 +10,19 @@ services:
       - ACCEPT_EULA=Y
       - SA_PASSWORD=
 
-  etl_api:
+  etl-api:
     build: .
     ports:
       - "3000:3000"
     environment:
-      - SOURCE_DB_HOST=sql_server
+      - SOURCE_DB_HOST="sql-server"
       - SOURCE_DB_PORT=1433
       - SOURCE_DB_USERNAME=sa
       - SOURCE_DB_PASSWORD=
-      - DB_HOST=sql_server
+      - DB_HOST="sql-server"
       - DB_PORT=1433
       - DB_USERNAME=sa
       - DB_PASSWORD=
       - ROOT_PATH=/usr/app
     depends_on:
-      - sql_server
+      - sql-server

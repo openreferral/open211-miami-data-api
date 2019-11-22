@@ -55,6 +55,13 @@ GEM
       faraday (~> 0.9)
       faraday_middleware (~> 0.10)
       nokogiri (~> 1.6, >= 1.6.8)
+    azure-storage-blob (1.1.0)
+      azure-core (~> 0.1.13)
+      azure-storage-common (~> 1.0)
+      nokogiri (~> 1.6, >= 1.6.8)
+    azure-storage-common (1.1.0)
+      azure-core (~> 0.1.13)
+      nokogiri (~> 1.6, >= 1.6.8)
     builder (3.2.3)
     coderay (1.1.2)
     concurrent-ruby (1.1.5)
@@ -257,6 +264,7 @@ PLATFORMS
 DEPENDENCIES
   activerecord-sqlserver-adapter
   azure-storage
+  azure-storage-blob
   delayed_job_active_record
   dotenv-rails
   fakefs
