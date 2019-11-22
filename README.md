@@ -67,11 +67,49 @@ Use the value of api_key in a request header when making a request:
 
 ## Deployment
 
-You can deploy with Docker. Once you have the docker container up and running and connected to a running SQL Server container (see docker-compose.yml), open an interactive container shell and set up the DB:
+You can deploy with Docker to Azure Kubernetes Service. 
+
+Create the image locally:
 
 ```
-docker exec -it open211-miami-data-api_etl_api_1 bash
-root@455fb3fdc06f:/usr/app# rails db:create db:migrate
+docker-compose up --build -d
+```
+
+Tag the latest image (replace v2 if you need to):
+
+```
+docker tag open211-miami-data-api_etl-api openreferralregistry.azurecr.io/etl-api:v2
+```
+
+Push to the container registry (change v2 if needed):
+
+```
+docker push openreferralregistry.azurecr.io/etl-api:v2
+```
+
+You may need to log in for that to work (`az acr login --name openreferralregistry`)
+
+Once the image is pushed, deploy the updated application (change v2 if needed):
+
+```
+kubectl set image deployment etl-api etl-api=openreferralregistry.azurecr.io/etl-api:v2
+```
+
+This may take some time.
+
+To get the external IP to test out the deployed app:
+
+```
+kubectl get service etl-api
+```
+
+Once you have the docker container up and running and connected to a running SQL Server container (see docker-compose.yml), open an interactive container shell and set up the DB:
+
+```
+kubectl get pods
+#=> etl-api-8697b4858c-xsswk (or similar)
+kubectl exec -it etl-api-8697b4858c-xsswk bash
+root@455fb3fdc06f:/usr/app# rails db:setup
 ```
 
 Note: `open211-miami-data-api_etl_api_1` is the container name. Your container name may be different.
@@ -79,6 +117,23 @@ Note: `open211-miami-data-api_etl_api_1` is the container name. Your container n
 For now, you will need to migrate the database with every release. Once you deploy your new release, open an interactive shell and migrate:
 
 ```
-docker exec -it open211-miami-data-api_etl_api_1 bash
+kubectl get pods
+#=> etl-api-8697b4858c-xsswk (or similar)
+kubectl exec -it etl-api-8697b4858c-xsswk bash
 root@455fb3fdc06f:/usr/app# rails db:migrate
+```
+
+To get the API Account ID to use to authenticate with the API:
+
+```
+kubectl get pods
+#=> etl-api-8697b4858c-xsswk (or similar)
+kubectl exec -it etl-api-8697b4858c-xsswk rails c
+irb$: ApiAccount.last.api_key
+```
+
+To update the azure config with things like env vars:
+
+```
+kubectl apply -f azure-kube-config.yaml 
 ```

@@ -53,6 +53,6 @@ gem 'azure-storage-blob', require: false
 
 gem 'fast_jsonapi'
 
-gem 'hsds_transformer', '0.0.3'
+gem 'hsds_transformer', '0.0.5'
 
 gem 'delayed_job_active_record'
